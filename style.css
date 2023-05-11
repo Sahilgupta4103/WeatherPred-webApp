@@ -1,0 +1,27 @@
+.values {
+  margin: 37px 150px 50px 380px;
+  padding: 26px 50px 50px 47px;
+  align-items: center;
+  border: 2px solid red;
+  display: inline-block;
+  justify-content: center;
+}
+.pre,
+.tmax,
+.tmin,
+.wind,
+.btn {
+  border: 3px solid black;
+  margin: 50px;
+  padding: 15px;
+  text-align: center;
+  display: flex;
+}
+
+.btn {
+  display: flex;
+  justify-content: center;
+  margin: 100px;
+  padding: 5px;
+  align-items: center;
+}
