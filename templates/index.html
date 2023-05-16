@@ -33,26 +33,34 @@
         padding: 5px;
         align-items: center;
       }
+      .pred {
+        border: 2px solid black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-right: 170px;
+        font-size: 25px;
+      }
     </style>
   </head>
   <body>
-    <form action="{{url_for('predict')}}" name="webapp" method="post">
+    <form action="{{url_for('predict')}}"  method="post" autocomplete="on">
       <div class="values">
         <div class="pre">
           <label for="precipitation">Precipitation</label>
-          <input type="text" id="precep" />
+          <input type="text" name="precep" id="precep" />
         </div>
         <div class="tmax">
           <label for="temp_max">Max Temperature</label>
-          <input type="text" name="" id="temp_max" />
+          <input type="text" name="temp_max" id="temp_max" />
         </div>
         <div class="tmin">
           <label for="temp_min">Minimum Temperature</label>
-          <input type="text" name="" id="temp_min" />
+          <input type="text" name="temp_min" id="temp_min" />
         </div>
         <div class="wind">
           <label for="wind">Wind Speed</label>
-          <input type="text" name="" id="wind" />
+          <input type="text" name="wind" id="wind" />
         </div>
         <div class="btn">
           <button type="submit">submit</button>
@@ -61,6 +69,6 @@
     </form>
 
     <br />
-    <div style="margin: 90px">{{prediction_text}}</div>
+    <div class="pred">{{prediction_text}}</div>
   </body>
 </html>

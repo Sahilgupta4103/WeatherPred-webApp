@@ -1,0 +1,11 @@
+Flask
+sklearn
+pandas
+numpy
+matplotlib
+seaborn
+missingno
+scipy
+xgboost
+re
+gunicorn
