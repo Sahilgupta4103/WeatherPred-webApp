@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Weather Prediction</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      #myVideo {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        min-width: 100%;
+        min-height: 100%;
+        z-index: -1;
+      }
+
+      .content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100vh;
+        background-color: rgba(
+          0,
+          0,
+          0,
+          0.5
+        ); /* Adjust transparency as needed */
+        color: #fff;
+        font-size: 24px;
+      }
+      input {
+        margin: 10px;
+        padding: 5px;
+        border: 1px solid #fff;
+        background-color: transparent;
+        color: #fff;
+        border-radius: 20px;
+      }
+
+      input,
+      button {
+        margin: 10px;
+        padding: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <video autoplay muted loop id="myVideo">
+      <source src="static/bg.mp4" type="video/mp4" />
+    </video>
+
+    <div class="content">
+      <input type="text" id="city" placeholder="City name" autocomplete="on" />
+      <input
+        type="text"
+        id="state"
+        placeholder="State code"
+        autocomplete="on"
+      />
+      <input
+        type="text"
+        id="country"
+        placeholder="Country code"
+        autocomplete="on"
+      />
+      <button onclick="fetchData()">Fetch Data</button>
+      <div id="data" style="border: 2px solid black"></div>
+    </div>
+
+    <script>
+      function fetchData() {
+        let cityName = document.getElementById("city").value;
+        let stateCode = document.getElementById("state").value;
+        let countryCode = document.getElementById("country").value;
+
+        const apiKey = "e581325cc174bf7f15f8543306cd5810";
+        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName},${stateCode},${countryCode}&appid=${apiKey}`;
+
+        fetch(apiUrl)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Request failed");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            const precep = 0;
+            const t1 = data.main.temp_min;
+            const t2 = data.main.temp_mix;
+            const wind = data.wind.speed;
+            const input = { precep, t1, t2, wind };
+            fetch("/predict", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(input),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                // Handle the response data from Flask
+                console.log(data);
+                displayPrediction(data.prediction_text);
+              })
+              .catch((error) => {
+                // Handle any errors
+                console.error("Error:", error);
+              });
+
+            displayPrediction(data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+
+        return false; // Prevent form submission
+      }
+
+      function displayPrediction(prediction) {
+        const predictionDiv = document.getElementById("data");
+        predictionDiv.innerText = `The weather of your city is ${prediction}`;
+      }
+    </script>
+  </body>
+</html>
