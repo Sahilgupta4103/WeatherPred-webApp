@@ -12,7 +12,7 @@ model = pickle.load(open("model.pkl", "rb"))
 # defining the homepage
 @app.route("/")
 def home():
-    return render_template("APIindex.html")
+    return render_template("index.html")
 
 
 # defining the predict page

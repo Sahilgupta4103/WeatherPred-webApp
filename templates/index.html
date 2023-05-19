@@ -1,74 +1,131 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Weather Prediction Application</title>
+    <title>Weather Prediction</title>
     <style>
-      .values {
-        margin: 37px 150px 50px 380px;
-        padding: 26px 50px 50px 47px;
-        align-items: center;
-        border: 2px solid red;
-        display: inline-block;
-        justify-content: center;
-      }
-      .pre,
-      .tmax,
-      .tmin,
-      .wind,
-      .btn {
-        border: 3px solid black;
-        margin: 50px;
-        padding: 15px;
-        text-align: center;
-        display: flex;
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
       }
 
-      .btn {
-        display: flex;
-        justify-content: center;
-        margin: 100px;
-        padding: 5px;
-        align-items: center;
+      #myVideo {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        min-width: 100%;
+        min-height: 100%;
+        z-index: -1;
       }
-      .pred {
-        border: 2px solid black;
+
+      .content {
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
-        padding-right: 170px;
-        font-size: 25px;
+        width: 100%;
+        height: 100vh;
+        background-color: rgba(
+          0,
+          0,
+          0,
+          0.5
+        ); /* Adjust transparency as needed */
+        color: #fff;
+        font-size: 24px;
+      }
+      input {
+        margin: 10px;
+        padding: 5px;
+        border: 1px solid #fff;
+        background-color: transparent;
+        color: #fff;
+        border-radius: 20px;
+      }
+
+      input,
+      button {
+        margin: 10px;
+        padding: 5px;
       }
     </style>
   </head>
   <body>
-    <form action="{{url_for('predict')}}"  method="post" autocomplete="on">
-      <div class="values">
-        <div class="pre">
-          <label for="precipitation">Precipitation</label>
-          <input type="text" name="precep" id="precep" />
-        </div>
-        <div class="tmax">
-          <label for="temp_max">Max Temperature</label>
-          <input type="text" name="temp_max" id="temp_max" />
-        </div>
-        <div class="tmin">
-          <label for="temp_min">Minimum Temperature</label>
-          <input type="text" name="temp_min" id="temp_min" />
-        </div>
-        <div class="wind">
-          <label for="wind">Wind Speed</label>
-          <input type="text" name="wind" id="wind" />
-        </div>
-        <div class="btn">
-          <button type="submit">submit</button>
-        </div>
-      </div>
-    </form>
+    <video autoplay muted loop id="myVideo">
+      <source src="static/bg.mp4" type="video/mp4" />
+    </video>
 
-    <br />
-    <div class="pred">{{prediction_text}}</div>
+    <div class="content">
+      <input type="text" id="city" placeholder="City name" autocomplete="on" />
+      <input
+        type="text"
+        id="state"
+        placeholder="State code"
+        autocomplete="on"
+      />
+      <input
+        type="text"
+        id="country"
+        placeholder="Country code"
+        autocomplete="on"
+      />
+      <button onclick="fetchData()">Fetch Data</button>
+      <div id="data" style="border: 2px solid black"></div>
+    </div>
+
+    <script>
+      function fetchData() {
+        let cityName = document.getElementById("city").value;
+        let stateCode = document.getElementById("state").value;
+        let countryCode = document.getElementById("country").value;
+
+        const apiKey = "e581325cc174bf7f15f8543306cd5810";
+        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName},${stateCode},${countryCode}&appid=${apiKey}`;
+
+        fetch(apiUrl)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Request failed");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            const precep = 0;
+            const t1 = data.main.temp_min;
+            const t2 = data.main.temp_mix;
+            const wind = data.wind.speed;
+            const input = { precep, t1, t2, wind };
+            fetch("/predict", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(input),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                // Handle the response data from Flask
+                console.log(data);
+                displayPrediction(data.prediction_text);
+              })
+              .catch((error) => {
+                // Handle any errors
+                console.error("Error:", error);
+              });
+
+            displayPrediction(data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+
+        return false; // Prevent form submission
+      }
+
+      function displayPrediction(prediction) {
+        const predictionDiv = document.getElementById("data");
+        predictionDiv.innerText = `The weather of your city is ${prediction}`;
+      }
+    </script>
   </body>
 </html>
