@@ -7,5 +7,4 @@ seaborn
 missingno
 scipy
 xgboost
-re
 gunicorn
