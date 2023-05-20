@@ -92,7 +92,7 @@
           .then((data) => {
             const precep = 0;
             const t1 = data.main.temp_min;
-            const t2 = data.main.temp_mix;
+            const t2 = data.main.temp_max;
             const wind = data.wind.speed;
             const input = { precep, t1, t2, wind };
             fetch("/predict", {
