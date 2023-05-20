@@ -1,0 +1,8 @@
+[build]
+  command = "python app.py"  # Replace with your build command
+  publish = "D:\GITHUB\WeatherPred-webApp\templates"  # Replace with the directory containing your built files
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
