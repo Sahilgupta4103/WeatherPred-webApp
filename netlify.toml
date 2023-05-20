@@ -1,6 +1,6 @@
 [build]
-  command = "python app.py"  # Replace with your build command
-  publish = "D:\GITHUB\WeatherPred-webApp\templates"  # Replace with the directory containing your built files
+  command = "python app.py"  
+  publish = "D:\GITHUB\WeatherPred-webApp\templates"  
 
 [[redirects]]
   from = "/*"
